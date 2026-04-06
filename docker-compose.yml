@@ -5,9 +5,8 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app/app
-    environment:
-      - ENV=development
-  
+    env_file:
+      - .env
   redis:
     image: redis:alpine
     ports:
