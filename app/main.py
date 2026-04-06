@@ -4,12 +4,12 @@ app = FastAPI()
 
 @app.get("/")
 def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello from Docker Compose!"}
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-@app.get("/echo")
+@app.post("/echo")
 def echo(body: dict):
     return body
