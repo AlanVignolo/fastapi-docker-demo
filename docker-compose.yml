@@ -14,6 +14,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+    depends_on:
+      db:
+        condition: service_healthy
 
   redis:
     image: redis:alpine
@@ -25,3 +28,23 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: alan
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: fastapi_demo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alan -d fastapi_demo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
