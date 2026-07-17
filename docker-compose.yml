@@ -17,6 +17,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
 
   redis:
     image: redis:alpine
@@ -34,14 +36,15 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: alan
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: fastapi_demo
+      POSTGRES_USER: ${POSTGRES_USER:-demo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-demo_password}
+      POSTGRES_DB: ${POSTGRES_DB:-fastapi_demo}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U alan -d fastapi_demo"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
