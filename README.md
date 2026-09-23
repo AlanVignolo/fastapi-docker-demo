@@ -8,6 +8,8 @@ This is a practice exercise, not a product: I built it to learn how to container
 
 FastAPI, Redis (cache with TTL), PostgreSQL (request log), Docker Compose. Three services on one network — the API talks to both, `db/init.sql` creates the schema on first start.
 
+The image builds on `python:3.11-slim` in two stages, so dependencies and app code sit in separate layers. The app itself is a single `main.py` with no routers or service layers — small enough that splitting it up would've been overhead. Everything configurable (DB, Redis, TTL) comes from environment variables, nothing hardcoded.
+
 ## Run it
 
 ```bash
